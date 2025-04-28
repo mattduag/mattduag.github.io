@@ -1,4 +1,4 @@
-name: Minify BipPip.js
+name: Minify BipPip JavaScript Files
 
 on:
   push:
@@ -9,15 +9,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-      - name: Minify BipPip.js
-        run: npx uglify-js ./BipPip/BipPip.js -o ./BipPip/BipPip.min.js --compress --mangle
+      - name: Minify JavaScript files
+        run: |
+          find ./BipPip -type f -name 'BipPip-*.js' -exec npx uglify-js {} -o {}.min.js --compress --mangle \;
 
-      - name: Commit BipPip.min.js file
+      - name: Commit and push minified files
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
-          git add ./BipPip/BipPip.min.js
-          git commit -m "Minify BipPip.js to BipPip.min.js on push" || echo "No changes to commit"
+          git add ./BipPip/*.min.js
+          git commit -m "Minify JavaScript files on push" || echo "No changes to commit"
           git push https://x-access-token:${{ secrets.PERSONAL_TOKEN }}@github.com/${{ github.repository }} HEAD:main
