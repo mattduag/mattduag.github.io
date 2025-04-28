@@ -20,6 +20,4 @@ jobs:
           git config user.email github-actions@github.com
           git add BipPip.min.js
           git commit -m "Minify BipPip.js to BipPip.min.js on push" || echo "No changes to commit"
-          git push
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          git push https://x-access-token:${{ secrets.PERSONAL_TOKEN }}@github.com/${{ github.repository }} HEAD:main
