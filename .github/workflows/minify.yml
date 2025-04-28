@@ -1,0 +1,25 @@
+name: Minify JS
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  minify:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Minify script.js
+        run: npx uglify-js script.js -o script.min.js --compress --mangle
+
+      - name: Commit minified file
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add script.min.js
+          git commit -m "Minify JS on push" || echo "No changes to commit"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
